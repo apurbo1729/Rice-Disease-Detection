@@ -1,0 +1,263 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>{{ title if title else "RiceHealth" }}</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0; padding: 0;
+      background: #f7f7f7;
+      color: #222;
+    }
+
+    /* Nav styles */
+    .nav {
+      background: #2B6CB0;
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(43, 108, 176, 0.4);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      flex-wrap: wrap;
+    }
+
+    /* Left section: logo + brand + nav links container */
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-weight: 600;
+    }
+
+    .nav-left a,
+    .nav > div > a {
+      color: white;
+      text-decoration: none;
+      font-size: 1rem;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .nav-left a:hover,
+    .nav > div > a:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #f0f0f0;
+    }
+
+    /* Logo image */
+    .logo {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 6px;
+      margin-right: 6px;
+      background: white;
+      padding: 4px;
+    }
+
+    /* Brand name styling */
+    .nav-left a.brand {
+      font-size: 1.3rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Right profile section */
+    .right-profile {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 600;
+    }
+
+    .profile-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2.5px solid white;
+      cursor: pointer;
+      transition: box-shadow 0.3s;
+    }
+
+    .profile-thumb:hover {
+      box-shadow: 0 0 8px 2px #2B6CB0;
+    }
+
+    .right-profile a {
+      color: white;
+      text-decoration: underline;
+      font-weight: 500;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: background-color 0.3s;
+    }
+
+    .right-profile a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Main content container */
+    .container {
+      padding: 24px 30px;
+      max-width: 980px;
+      margin: 24px auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      min-height: 70vh;
+    }
+
+    /* Flash messages */
+    .flash {
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      user-select: none;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    }
+    .flash.error {
+      background: #FFE3E3;
+      color: #800;
+      border: 1.5px solid #cc0000;
+    }
+    .flash.success {
+      background: #E6FFFA;
+      color: #055;
+      border: 1.5px solid #00a676;
+    }
+
+    /* Hamburger menu button */
+    .menu-btn {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 28px;
+      height: 22px;
+      cursor: pointer;
+      margin-left: 12px;
+    }
+    .menu-btn span {
+      height: 4px;
+      width: 100%;
+      background: white;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    /* Nav links container for toggling on small */
+    .nav-links {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    /* Responsive behavior */
+    @media (max-width: 720px) {
+      .nav-left {
+        flex-grow: 1;
+      }
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        margin-top: 10px;
+        gap: 10px;
+        background: #2B6CB0;
+        border-radius: 8px;
+        padding: 12px 10px;
+      }
+      .nav-links.show {
+        display: flex;
+      }
+      .menu-btn {
+        display: flex;
+      }
+      .right-profile {
+        gap: 10px;
+        font-size: 0.9rem;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <nav class="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-left">
+      <a href="{{ url_for('index') }}" class="brand" aria-label="Rice Helper home">
+  <img src="{{ url_for('static', filename='images/Logo.png') }}" alt="Rice Helper Logo" class="logo" />
+  RiceHealth
+</a>
+
+      
+      <!-- Nav links container toggled by hamburger -->
+      <div class="nav-links" id="navLinks">
+        <a href="{{ url_for('index') }}">Home</a>
+        <a href="{{ url_for('rice_disease') }}">Rice Disease Detection</a>
+        <a href="{{ url_for('soil_test') }}">Soil Test</a>
+      </div>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      {% if user %}
+        <div class="right-profile">
+          <a href="{{ url_for('profile') }}" title="Profile">
+            {% if user.profile_photo %}
+              <img src="{{ url_for('uploaded_file', filename=user.profile_photo) }}" class="profile-thumb" alt="profile" />
+            {% else %}
+              <img src="https://via.placeholder.com/44" class="profile-thumb" alt="profile" />
+            {% endif %}
+          </a>
+          <div>{{ user.name }}</div>
+          <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+      {% else %}
+        <a href="{{ url_for('login') }}" style="color:white; font-weight:600; margin-right:12px; text-decoration:none;">Login</a>
+        <a href="{{ url_for('register') }}" style="color:white; font-weight:600; text-decoration:none;">Register</a>
+      {% endif %}
+
+      <!-- Hamburger menu button -->
+      <button class="menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks" id="menuBtn" type="button">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="flash {{ 'error' if category=='error' else 'success' if category=='success' else '' }}">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+
+    menuBtn.addEventListener('click', () => {
+      const isExpanded = menuBtn.getAttribute('aria-expanded') === 'true';
+      menuBtn.setAttribute('aria-expanded', !isExpanded);
+      navLinks.classList.toggle('show');
+    });
+  </script>
+</body>
+</html>

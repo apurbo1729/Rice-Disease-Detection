@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width: 1200px; margin: 60px auto; font-family: Arial, sans-serif;">
+
+  <!-- Page Title -->
+  <h1 style="text-align: center; color: #2e7d32; font-size: 3.2rem; margin-bottom: 20px; font-weight: bold;">
+    🌱 Soil Test (Real-time NPK Sensor)
+  </h1>
+  <p style="text-align: center; color: #444; font-size: 1.3rem; margin-bottom: 50px;">
+    This page updates every <b>2 seconds</b> to show simulated Nitrogen, Phosphorus, and Potassium values from your soil.
+  </p>
+
+  <!-- NPK Dashboard -->
+  <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+
+    <!-- Nitrogen -->
+    <div style="
+      width: 220px;
+      height: 220px;
+      background: #E3F2FD;
+      border-radius: 50%;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      text-align: center;
+    ">
+      <div style="font-size: 1.5rem; font-weight: bold; color: #1565c0;">Nitrogen (N)</div>
+      <div id="nitrogen" style="font-size: 3.5rem; margin-top: 15px; color: #0d47a1;">--</div>
+    </div>
+
+    <!-- Phosphorus -->
+    <div style="
+      width: 220px;
+      height: 220px;
+      background: #FFF3E0;
+      border-radius: 50%;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      text-align: center;
+    ">
+      <div style="font-size: 1.5rem; font-weight: bold; color: #e65100;">Phosphorus (P)</div>
+      <div id="phosphorus" style="font-size: 3.5rem; margin-top: 15px; color: #bf360c;">--</div>
+    </div>
+
+    <!-- Potassium -->
+    <div style="
+      width: 220px;
+      height: 220px;
+      background: #E8F5E9;
+      border-radius: 50%;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+      text-align: center;
+    ">
+      <div style="font-size: 1.5rem; font-weight: bold; color: #2e7d32;">Potassium (K)</div>
+      <div id="potassium" style="font-size: 3.5rem; margin-top: 15px; color: #1b5e20;">--</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Auto Refresh Script -->
+<script>
+  async function fetchNPK(){
+    try {
+      const resp = await fetch("/soil-data");
+      const data = await resp.json();
+      document.getElementById("nitrogen").innerText = data.nitrogen;
+      document.getElementById("phosphorus").innerText = data.phosphorus;
+      document.getElementById("potassium").innerText = data.potassium;
+    } catch(e){
+      console.error(e);
+    }
+  }
+  fetchNPK();
+  setInterval(fetchNPK, 2000);
+</script>
+{% endblock %}

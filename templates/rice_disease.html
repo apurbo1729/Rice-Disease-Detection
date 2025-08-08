@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block content %}
+<div style="max-width: 1200px; margin: 60px auto; font-family: Arial, sans-serif;">
+
+  <!-- Page Title -->
+  <h1 style="text-align: center; color: #2e7d32; font-size: 3.2rem; margin-bottom: 30px; font-weight: bold;">
+    🍃 Rice Disease Detection
+  </h1>
+  <p style="text-align: center; color: #444; font-size: 1.3rem; margin-bottom: 50px; line-height: 1.6;">
+    Upload a high-quality image of your rice plant.<br>
+    Our AI will analyze it and identify possible diseases instantly.
+  </p>
+
+  <!-- Ultra-Large Upload Card -->
+  <form method="post" enctype="multipart/form-data" 
+        style="background: #f9f9f9; padding: 60px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.15);">
+    <div style="margin-bottom: 30px;">
+      <label style="font-weight: bold; color: #333; font-size: 1.5rem;">📸 Choose Image</label><br>
+      <input type="file" name="image" accept="image/*" required
+             style="margin-top: 15px; padding: 20px; border: 2px solid #ccc; border-radius: 12px; width: 100%; font-size: 1.2rem; cursor: pointer;">
+    </div>
+    <button type="submit" 
+            style="background: #43a047; color: white; padding: 20px 30px; border: none; border-radius: 14px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.5rem;">
+      🔍 Predict Disease
+    </button>
+  </form>
+
+  <!-- Prediction Results -->
+  {% if filename %}
+    <div style="margin-top: 50px; text-align: center;">
+      <h2 style="color: #1b5e20; font-size: 2rem; margin-bottom: 20px;">Uploaded Image</h2>
+      <img src="{{ url_for('uploaded_file', filename=filename) }}" 
+           alt="Uploaded Image"
+           style="max-width: 100%; border-radius: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); margin-bottom: 30px;">
+      <h2 style="color: #2e7d32; font-size: 2.2rem;">Prediction: 
+        <span style="color: #1565c0; font-weight: bold;">{{ prediction }}</span>
+      </h2>
+      <p style="font-size: 1.1rem; color: #777; margin-top: 15px;">
+        *Replace <code>dummy_predict</code> in <b>app.py</b> with your actual model prediction code.
+      </p>
+    </div>
+  {% endif %}
+
+</div>
+{% endblock %}
